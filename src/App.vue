@@ -2,24 +2,61 @@
   <v-app>
     <v-container>
       <v-card class="pa-6" max-width="600" mx-auto>
+
         <v-card-title>Teste Checkout Transparente</v-card-title>
 
-        <v-text-field v-model="form.name" label="Nome" />
-        <v-text-field v-model="form.email" label="Email" />
-        <v-text-field v-model="form.cpf" label="CPF (só números)" />
-        <v-text-field v-model="form.phone" label="Telefone (DDD+número)" />
-        <v-text-field v-model="valorReais" label="Valor (R$)" />
+        <form
+          data-pagarmecheckout-form
+          @submit.prevent="onSubmit"
+        >
+          <v-text-field v-model="form.name" name="name" label="Nome" />
 
-        <v-divider class="my-4" />
+          <v-text-field v-model="form.email" name="email" label="Email" />
+          <v-text-field v-model="form.cpf" name="cpf" label="CPF (só números)" />
+          <v-text-field v-model="form.phone" name="phone" label="Telefone (DDD+número)" />
 
-        <!-- campos são `data-pagarmecheckout-element` -->
-        <v-text-field v-model="card.number" data-pagarmecheckout-element="number" label="Número do Cartão" />
-        <v-text-field v-model="card.name" data-pagarmecheckout-element="holder_name" label="Nome no Cartão" />
-        <v-text-field v-model="card.exp_month" data-pagarmecheckout-element="exp_month" label="Mês (MM)" />
-        <v-text-field v-model="card.exp_year" data-pagarmecheckout-element="exp_year" label="Ano (AAAA)" />
-        <v-text-field v-model="card.cvv" data-pagarmecheckout-element="cvv" label="CVV" />
+          <v-text-field v-model="valorReais" label="Valor (R$)" />
 
-        <v-btn color="primary" @click="pagar">Pagar</v-btn>
+          <v-divider class="my-4" />
+
+          <!-- Campos do cartão com os atributos para tokenizecard.js -->
+          <v-text-field
+            v-model="card.number"
+            name="number"
+            data-pagarmecheckout-element="number"
+            label="Número do Cartão"
+          />
+
+          <v-text-field
+            v-model="card.name"
+            name="holder_name"
+            data-pagarmecheckout-element="holder_name"
+            label="Nome no Cartão"
+          />
+
+          <v-text-field
+            v-model="card.exp_month"
+            name="exp_month"
+            data-pagarmecheckout-element="exp_month"
+            label="Mês (MM)"
+          />
+
+          <v-text-field
+            v-model="card.exp_year"
+            name="exp_year"
+            data-pagarmecheckout-element="exp_year"
+            label="Ano (AAAA)"
+          />
+
+          <v-text-field
+            v-model="card.cvv"
+            name="cvv"
+            data-pagarmecheckout-element="cvv"
+            label="CVV"
+          />
+
+          <v-btn type="submit" color="primary">Pagar</v-btn>
+        </form>
 
         <pre>{{ response }}</pre>
       </v-card>
@@ -53,14 +90,16 @@ export default {
       return Math.round(parseFloat(valor.replace(",", ".")) * 100);
     },
 
-    pagar() {
-      // aqui inicializamos o tokenizecard.js
+    onSubmit() {
+      // O tokenizecard.js irá interceptar esse submit
+      // e chamar automaticamente PagarmeCheckout.init()
       window.PagarmeCheckout.init(
         async (data) => {
           try {
-            // `data` contém o token do cartão
+            // token gerado
             const cardToken = data.pagarmetoken;
 
+            // monta o payload completo
             const payload = {
               ...this.form,
               amount: this.reaisParaCentavos(this.valorReais),
