@@ -85,6 +85,11 @@ export default {
         this.response = error;
       }
     );
+
+    const form = document.querySelector('[data-pagarmecheckout-form]');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+    });
   },
   methods: {
     reaisParaCentavos(valor) {
