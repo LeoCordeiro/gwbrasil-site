@@ -6,16 +6,32 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title><%= htmlWebpackPlugin.options.title %></title>
-    <script
-      src="https://checkout.pagar.me/v1/tokenizecard.js"
-      data-pagarmecheckout-app-id="pk_YlZAe1wCltJVdkay"
-    ></script>
   </head>
   <body>
     <noscript>
       <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app"></div>
-    <!-- built files will be auto injected -->
+    <form id="pagarme-form" data-pagarmecheckout-form style="display:none">
+      <input type="text" name="card_number" data-pagarmecheckout-element="card_number" />
+      <input type="text" name="card_holder_name" data-pagarmecheckout-element="card_holder_name" />
+      <input type="text" name="card_expiration_date" data-pagarmecheckout-element="card_expiration_date" />
+      <input type="text" name="card_cvv" data-pagarmecheckout-element="card_cvv" />
+    </form>
+    <script
+      src="https://checkout.pagar.me/v1/tokenizecard.js"
+      data-pagarmecheckout-app-id="pk_YlZAe1wCltJVdkay"
+    ></script>
+    <script>
+      window.PagarmeCheckout = window.PagarmeCheckout || {};
+
+      window.PagarmeCheckout.onSuccess = function (data) {
+        console.log("TOKEN GERADO COM SUCESSO:", data);
+      };
+
+      window.PagarmeCheckout.onError = function (err) {
+        console.error("ERRO PAGARME:", err);
+      };
+    </script>
   </body>
 </html>

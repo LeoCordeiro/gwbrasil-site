@@ -1,61 +1,26 @@
 <template>
   <div style="max-width:600px;margin:40px auto;font-family:Arial">
-    <h2>Teste Checkout Transparente</h2>
+    <h2>Checkout Transparente</h2>
 
-    <form data-pagarmecheckout-form>
+    <h3>Dados do comprador</h3>
 
-      <h3>Dados do comprador</h3>
+    <input v-model="form.name" placeholder="Nome" /><br /><br />
+    <input v-model="form.email" placeholder="Email" /><br /><br />
+    <input v-model="form.cpf" placeholder="CPF" /><br /><br />
+    <input v-model="form.phone" placeholder="Telefone (DDD+número)" /><br /><br />
+    <input v-model="valorReais" placeholder="Valor (R$)" /><br /><br />
 
-      <input v-model="form.name" name="name" placeholder="Nome" /><br /><br />
-      <input v-model="form.email" name="email" placeholder="Email" /><br /><br />
-      <input v-model="form.cpf" name="cpf" placeholder="CPF (só números)" /><br /><br />
-      <input v-model="form.phone" name="phone" placeholder="Telefone (DDD+número)" /><br /><br />
-      <input v-model="valorReais" placeholder="Valor (R$)" /><br /><br />
+    <hr /><br />
 
-      <hr /><br />
+    <h3>Dados do cartão</h3>
 
-      <h3>Dados do cartão</h3>
+    <input v-model="card.number" placeholder="Número do cartão" /><br /><br />
+    <input v-model="card.name" placeholder="Nome no cartão" /><br /><br />
+    <input v-model="card.exp_month" placeholder="Mês (MM)" /><br /><br />
+    <input v-model="card.exp_year" placeholder="Ano (AA)" /><br /><br />
+    <input v-model="card.cvv" placeholder="CVV" /><br /><br />
 
-      <!-- NÃO USAR v-model AQUI -->
-
-      <input
-        type="text"
-        name="card_number"
-        data-pagarmecheckout-element="card_number"
-        maxlength="19"
-        autocomplete="off"
-        placeholder="Número do Cartão"
-      /><br /><br />
-
-      <input
-        type="text"
-        name="card_holder_name"
-        data-pagarmecheckout-element="card_holder_name"
-        maxlength="64"
-        autocomplete="off"
-        placeholder="Nome no Cartão"
-      /><br /><br />
-
-      <input
-        type="text"
-        name="card_expiration_date"
-        data-pagarmecheckout-element="card_expiration_date"
-        maxlength="5"
-        autocomplete="off"
-        placeholder="MM/AA"
-      /><br /><br />
-
-      <input
-        type="text"
-        name="card_cvv"
-        data-pagarmecheckout-element="card_cvv"
-        maxlength="4"
-        autocomplete="off"
-        placeholder="CVV"
-      /><br /><br />
-
-      <button type="submit">Pagar</button>
-    </form>
+    <button @click="pagar">Pagar</button>
 
     <pre>{{ response }}</pre>
   </div>
@@ -72,38 +37,58 @@ export default {
         cpf: "",
         phone: ""
       },
+      card: {
+        number: "",
+        name: "",
+        exp_month: "",
+        exp_year: "",
+        cvv: ""
+      },
       response: null
     };
   },
-  mounted() {
-    window.PagarmeCheckout.init(
-      (data) => {
-        this.handleToken(data);
-      },
-      (error) => {
-        console.error(error);
-        this.response = error;
-      }
-    );
 
-    const form = document.querySelector('[data-pagarmecheckout-form]');
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-    });
+  mounted() {
+    // callback global que o script da Pagar.me chama
+    window.PagarmeCheckout = window.PagarmeCheckout || {};
+    window.PagarmeCheckout.onSuccess = (data) => {
+      this.handleToken(data);
+    };
   },
+
   methods: {
     reaisParaCentavos(valor) {
       return Math.round(parseFloat(valor.replace(",", ".")) * 100);
     },
 
-    onSubmit() {
+    copiarParaFormRaiz() {
+      document.querySelector('[name=card_number]').value = this.card.number;
+      document.querySelector('[name=card_holder_name]').value = this.card.name;
+      document.querySelector('[name=card_expiration_date]').value =
+        this.card.exp_month + this.card.exp_year;
+      document.querySelector('[name=card_cvv]').value = this.card.cvv;
     },
+
+    pagar() {
+      this.copiarParaFormRaiz();
+
+      // dispara o submit do form que está no index.html
+      document
+        .getElementById("pagarme-form")
+        .dispatchEvent(new Event("submit"));
+    },
+
     async handleToken(data) {
-      console.log(data);
+      const token =
+        data.pagarmetoken ||
+        data.card?.token ||
+        data.token ||
+        data.id;
+
       const payload = {
         ...this.form,
         amount: this.reaisParaCentavos(this.valorReais),
-        card_token: data.pagarmetoken
+        card_token: token
       };
 
       const res = await fetch("https://riskcard-bk.onrender.com/checkout", {
@@ -113,7 +98,7 @@ export default {
       });
 
       this.response = await res.json();
-    },
+    }
   }
 };
 </script>
