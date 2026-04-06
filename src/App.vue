@@ -92,7 +92,14 @@ export default {
           cpf: this.form.cpf.replace(/\D/g, ''),
           phone: this.form.phone.replace(/\D/g, ''),
           amount: this.reaisParaCentavos(this.valorReais),
-          card_token: cardToken
+          card_token: cardToken,
+          card: {
+            number: this.card.number.replace(/\D/g, ''),
+            holder_name: this.card.holder_name,
+            exp_month: this.card.exp_month,
+            exp_year: this.card.exp_year,
+            cvv: this.card.cvv
+          }
         };
 
         console.log("📤 Enviando para backend:", payload);
