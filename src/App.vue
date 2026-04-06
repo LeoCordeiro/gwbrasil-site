@@ -99,6 +99,7 @@ export default {
     onSubmit() {
     },
     async handleToken(data) {
+      console.log(data);
       const payload = {
         ...this.form,
         amount: this.reaisParaCentavos(this.valorReais),
