@@ -75,35 +75,39 @@ export default {
       response: null
     };
   },
-
+  mounted() {
+    window.PagarmeCheckout.init(
+      (data) => {
+        this.handleToken(data);
+      },
+      (error) => {
+        console.error(error);
+        this.response = error;
+      }
+    );
+  },
   methods: {
     reaisParaCentavos(valor) {
       return Math.round(parseFloat(valor.replace(",", ".")) * 100);
     },
 
     onSubmit() {
-      window.PagarmeCheckout.init(
-        async (data) => {
-          const payload = {
-            ...this.form,
-            amount: this.reaisParaCentavos(this.valorReais),
-            card_token: data.pagarmetoken
-          };
+    },
+    async handleToken(data) {
+      const payload = {
+        ...this.form,
+        amount: this.reaisParaCentavos(this.valorReais),
+        card_token: data.pagarmetoken
+      };
 
-          const res = await fetch("https://riskcard-bk.onrender.com/checkout", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-          });
+      const res = await fetch("https://riskcard-bk.onrender.com/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
 
-          this.response = await res.json();
-        },
-        (error) => {
-          this.response = error;
-          console.error(error);
-        }
-      );
-    }
+      this.response = await res.json();
+    },
   }
 };
 </script>
