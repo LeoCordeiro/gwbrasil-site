@@ -55,7 +55,7 @@ export default {
     async pagar() {
       try {
         const client = await window.pagarme.client.connect({
-          public_key: "pk_YlZAe1wCltJVdkay"
+          pk: "pk_YlZAe1wCltJVdkay"
         });
 
         // ✅ GERA O CARD_ID (API NOVA)
