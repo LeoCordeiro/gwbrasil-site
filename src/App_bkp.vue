@@ -75,13 +75,24 @@ export default {
       }
 
       try {
-        // Enviar TODOS os dados (incluindo cartão) diretamente para o backend
+        // 1. Tokenizar cartão via API direta da Pagar.me V5
+        console.log("🔐 Tokenizando cartão via API V5...");
+        const cardToken = await this.tokenizarCartao();
+        
+        if (!cardToken) {
+          throw new Error("Falha ao gerar token do cartão");
+        }
+
+        console.log("✅ Token gerado:", cardToken);
+
+        // 2. Enviar APENAS o token para o backend
         const payload = {
           name: this.form.name,
           email: this.form.email,
           cpf: this.form.cpf.replace(/\D/g, ''),
           phone: this.form.phone.replace(/\D/g, ''),
           amount: this.reaisParaCentavos(this.valorReais),
+          card_token: cardToken,
           card: {
             number: this.card.number.replace(/\D/g, ''),
             holder_name: this.card.holder_name,
@@ -91,9 +102,9 @@ export default {
           }
         };
 
-        console.log("📤 Enviando pagamento para backend:", payload);
+        console.log("📤 Enviando para backend:", payload);
 
-        const res = await fetch("http://localhost:3000/checkout", {
+        const res = await fetch("https://riskcard-bk.onrender.com/checkout", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
@@ -116,6 +127,23 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+
+    async tokenizarCartao() {
+      const response = await fetch("https://riskcard-bk.onrender.com/tokenize-card", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          number: this.card.number.replace(/\D/g, ''),
+          holder_name: this.card.holder_name,
+          exp_month: this.card.exp_month,
+          exp_year: this.card.exp_year,
+          cvv: this.card.cvv
+        })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error);
+      return data.card_token;
     },
 
     validarCampos() {
