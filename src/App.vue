@@ -1,6 +1,6 @@
 <template>
   <div style="max-width:600px;margin:40px auto;font-family:Arial">
-    <h2>Checkout Transparente - Pagar.me v5</h2>
+    <h2>Checkout Transparente - Pagar.me v5 (API Direta)</h2>
 
     <h3>Dados do comprador</h3>
     <input v-model="form.name" placeholder="Nome completo" /><br/><br/>
@@ -39,17 +39,17 @@ export default {
       valorReais: "59.90",
       loading: false,
       form: {
-        name: "",
-        email: "",
-        cpf: "",
-        phone: ""
+        name: "Cliente Teste",
+        email: "teste@email.com",
+        cpf: "12345678909",
+        phone: "11999999999"
       },
       card: {
-        number: "",
-        name: "",
-        exp_month: "",
-        exp_year: "",
-        cvv: ""
+        number: "4111111111111111",
+        name: "Teste Silva",
+        exp_month: "12",
+        exp_year: "2025",
+        cvv: "123"
       },
       response: null,
       error: null
@@ -67,23 +67,23 @@ export default {
       this.error = null;
       this.response = null;
 
-      // Validação básica
       if (!this.validarCampos()) {
         this.loading = false;
         return;
       }
 
       try {
-        // 1. Gerar token do cartão usando SDK v5
-        const cardToken = await this.gerarTokenCartao();
+        // 1. Gerar token usando API direta (SEM SDK)
+        console.log("1. Gerando token do cartão...");
+        const cardToken = await this.gerarTokenCartaoViaAPI();
         
         if (!cardToken) {
           throw new Error("Falha ao gerar token do cartão");
         }
 
-        console.log("Token gerado:", cardToken);
+        console.log("2. Token gerado:", cardToken);
 
-        // 2. Preparar payload
+        // 2. Enviar para seu backend local
         const payload = {
           name: this.form.name,
           email: this.form.email,
@@ -93,10 +93,9 @@ export default {
           card_token: cardToken
         };
 
-        console.log("Enviando payload:", payload);
+        console.log("3. Enviando para backend:", payload);
 
-        // 3. Enviar para o backend
-        const res = await fetch("http://localhost:3000/checkout", {
+        const res = await fetch("https://riskcard-bk.onrender.com/checkout", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
@@ -108,11 +107,12 @@ export default {
           throw new Error(JSON.stringify(data));
         }
 
+        console.log("4. Resposta do backend:", data);
         this.response = data;
         alert("Pagamento realizado com sucesso!");
 
       } catch (err) {
-        console.error("Erro:", err);
+        console.error("Erro completo:", err);
         this.error = err.message;
         alert("Erro ao processar pagamento: " + err.message);
       } finally {
@@ -120,41 +120,48 @@ export default {
       }
     },
 
-    gerarTokenCartao() {
-      return new Promise((resolve, reject) => {
-        // Verificar se o SDK está carregado - NOME CORRETO é "Pagarme" (com P maiúsculo)
-        if (typeof window.Pagarme === 'undefined') {
-          console.error("Objetos disponíveis:", Object.keys(window));
-          reject(new Error("SDK Pagar.me não carregado. Objeto 'Pagarme' não encontrado."));
-          return;
-        }
+    async gerarTokenCartaoViaAPI() {
+      // API direta de tokenização da Pagar.me v1 (ainda funciona)
+      const cardData = {
+        card_number: this.card.number.replace(/\D/g, ''),
+        card_holder_name: this.card.name,
+        card_expiration_date: `${this.card.exp_month}${this.card.exp_year}`,
+        card_cvv: this.card.cvv
+      };
 
-        console.log("SDK encontrado:", window.Pagarme);
+      console.log("Tokenizando cartão:", cardData);
 
-        // Configurar a API key pública
-        window.Pagarme.setApiKey("pk_YlZAe1wCltJVdkay");
-
-        // Dados do cartão no formato correto
-        const cardData = {
-          card_number: this.card.number.replace(/\D/g, ''),
-          card_holder_name: this.card.name,
-          card_expiration_date: `${this.card.exp_month}${this.card.exp_year}`,
-          card_cvv: this.card.cvv
-        };
-
-        console.log("Tokenizando cartão:", cardData);
-
-        // Gerar token - método correto do SDK
-        window.Pagarme.createToken(cardData, (response, error) => {
-          if (error) {
-            console.error("Erro na tokenização:", error);
-            reject(new Error(error.message || "Erro ao gerar token"));
-          } else {
-            console.log("Tokenização sucesso:", response);
-            resolve(response.id || response.token || response);
-          }
+      try {
+        const response = await fetch("https://api.pagar.me/1/transactions/card_hash_key", {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            api_key: "pk_YlZAe1wCltJVdkay",
+            amount: this.reaisParaCentavos(this.valorReais),
+            card_data: cardData
+          })
         });
-      });
+
+        const data = await response.json();
+        
+        console.log("Resposta da tokenização:", data);
+        
+        if (!response.ok) {
+          throw new Error(data.message || JSON.stringify(data));
+        }
+        
+        if (!data.card_hash) {
+          throw new Error("Resposta não contém card_hash");
+        }
+        
+        return data.card_hash;
+        
+      } catch (error) {
+        console.error("Erro na tokenização:", error);
+        throw new Error(`Tokenização falhou: ${error.message}`);
+      }
     },
 
     validarCampos() {
