@@ -2,7 +2,7 @@
   <div style="max-width:600px;margin:40px auto;font-family:Arial">
     <h2>Teste Checkout Transparente</h2>
 
-    <form data-pagarmecheckout-form @submit.prevent="onSubmit">
+    <form data-pagarmecheckout-form>
 
       <h3>Dados do comprador</h3>
 
