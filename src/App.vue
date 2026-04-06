@@ -123,61 +123,20 @@ export default {
     },
 
     async tokenizarCartao() {
-      // Endpoint correto de tokenização da Pagar.me V5
-      const tokenUrl = "https://api.pagar.me/core/v5/tokens";
-      
-      // Usar chave pública (pk_)
-      const publicKey = "pk_YlZAe1wCltJVdkay";
-      
-      // Preparar dados do cartão no formato correto para V5
-      const cardData = {
-        number: this.card.number.replace(/\D/g, ''),
-        holder_name: this.card.holder_name,
-        exp_month: parseInt(this.card.exp_month),
-        exp_year: parseInt(this.card.exp_year),
-        cvv: this.card.cvv
-      };
-
-      console.log("💳 Enviando para tokenização:", {
-        ...cardData,
-        number: "****" + cardData.number.slice(-4)
+      const response = await fetch("https://riskcard-bk.onrender.com/tokenize-card", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          number: this.card.number.replace(/\D/g, ''),
+          holder_name: this.card.holder_name,
+          exp_month: this.card.exp_month,
+          exp_year: this.card.exp_year,
+          cvv: this.card.cvv
+        })
       });
-
-      try {
-        const response = await fetch(tokenUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            // Autenticação com chave pública (Basic Auth)
-            "Authorization": `Basic ${btoa(publicKey + ":")}`
-          },
-          body: JSON.stringify({
-            type: "card",
-            card: cardData
-          })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          console.error("Erro na tokenização:", data);
-          if (data.errors) {
-            throw new Error(data.errors.map(e => e.message).join(", "));
-          }
-          throw new Error(data.message || "Erro ao gerar token");
-        }
-
-        if (!data.id) {
-          throw new Error("Token não retornado pela API");
-        }
-
-        console.log("✅ Tokenização bem-sucedida:", data.id);
-        return data.id;
-
-      } catch (error) {
-        console.error("❌ Erro na tokenização:", error);
-        throw new Error(`Falha na tokenização: ${error.message}`);
-      }
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error);
+      return data.card_token;
     },
 
     validarCampos() {
