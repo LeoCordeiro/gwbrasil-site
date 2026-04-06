@@ -122,16 +122,17 @@ export default {
 
     gerarTokenCartao() {
       return new Promise((resolve, reject) => {
-        // Verificar se o SDK está carregado
-        if (typeof window.pagarme === 'undefined') {
-          reject(new Error("SDK Pagar.me não carregado. Aguarde e tente novamente."));
+        // Verificar se o SDK está carregado - NOME CORRETO é "Pagarme" (com P maiúsculo)
+        if (typeof window.Pagarme === 'undefined') {
+          console.error("Objetos disponíveis:", Object.keys(window));
+          reject(new Error("SDK Pagar.me não carregado. Objeto 'Pagarme' não encontrado."));
           return;
         }
 
-        // Configurar a API key pública (sua chave publica)
-        window.pagarme.client.connect({ 
-          api_key: "pk_YlZAe1wCltJVdkay" 
-        });
+        console.log("SDK encontrado:", window.Pagarme);
+
+        // Configurar a API key pública
+        window.Pagarme.setApiKey("pk_YlZAe1wCltJVdkay");
 
         // Dados do cartão no formato correto
         const cardData = {
@@ -143,14 +144,14 @@ export default {
 
         console.log("Tokenizando cartão:", cardData);
 
-        // Gerar token
-        window.pagarme.client.card.hash(cardData, (response, error) => {
+        // Gerar token - método correto do SDK
+        window.Pagarme.createToken(cardData, (response, error) => {
           if (error) {
             console.error("Erro na tokenização:", error);
-            reject(new Error(error.response || error.message || "Erro ao gerar token"));
+            reject(new Error(error.message || "Erro ao gerar token"));
           } else {
             console.log("Tokenização sucesso:", response);
-            resolve(response.card_hash || response.id || response);
+            resolve(response.id || response.token || response);
           }
         });
       });
