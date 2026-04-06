@@ -55,7 +55,7 @@ export default {
   },
   methods: {
     async pagar() {
-      const encryptionKey = "SUA_ENCRYPTION_KEY_AQUI";
+      const encryptionKey = "pk_YlZAe1wCltJVdkay";
 
       const client = await window.pagarme.client.connect({ encryption_key: encryptionKey });
 
@@ -71,7 +71,7 @@ export default {
         card_hash: cardHash
       };
 
-      const res = await fetch("http://localhost:3000/checkout", {
+      const res = await fetch("https://riskcard-bk.onrender.com/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
