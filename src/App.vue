@@ -12,11 +12,12 @@
 
         <v-divider class="my-4" />
 
-        <v-text-field v-model="card.number" label="Número do Cartão" />
-        <v-text-field v-model="card.name" label="Nome no Cartão" />
-        <v-text-field v-model="card.exp_month" label="Mês (MM)" />
-        <v-text-field v-model="card.exp_year" label="Ano (AAAA)" />
-        <v-text-field v-model="card.cvv" label="CVV" />
+        <!-- campos são `data-pagarmecheckout-element` -->
+        <v-text-field v-model="card.number" data-pagarmecheckout-element="number" label="Número do Cartão" />
+        <v-text-field v-model="card.name" data-pagarmecheckout-element="holder_name" label="Nome no Cartão" />
+        <v-text-field v-model="card.exp_month" data-pagarmecheckout-element="exp_month" label="Mês (MM)" />
+        <v-text-field v-model="card.exp_year" data-pagarmecheckout-element="exp_year" label="Ano (AAAA)" />
+        <v-text-field v-model="card.cvv" data-pagarmecheckout-element="cvv" label="CVV" />
 
         <v-btn color="primary" @click="pagar">Pagar</v-btn>
 
@@ -52,39 +53,37 @@ export default {
       return Math.round(parseFloat(valor.replace(",", ".")) * 100);
     },
 
-    async pagar() {
-      try {
-        const client = await window.pagarme.client.connect({
-          pk: "pk_YlZAe1wCltJVdkay"
-        });
+    pagar() {
+      // aqui inicializamos o tokenizecard.js
+      window.PagarmeCheckout.init(
+        async (data) => {
+          try {
+            // `data` contém o token do cartão
+            const cardToken = data.pagarmetoken;
 
-        // ✅ GERA O CARD_ID (API NOVA)
-        const card = await client.cards.create({
-          number: this.card.number,
-          holder_name: this.card.name,
-          exp_month: this.card.exp_month,
-          exp_year: this.card.exp_year, // 2032
-          cvv: this.card.cvv,
-        });
+            const payload = {
+              ...this.form,
+              amount: this.reaisParaCentavos(this.valorReais),
+              card_token: cardToken
+            };
 
-        const payload = {
-          ...this.form,
-          amount: this.reaisParaCentavos(this.valorReais),
-          card_id: card.id
-        };
+            const res = await fetch("https://riskcard-bk.onrender.com/checkout", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload)
+            });
 
-        console.log("Payload enviado:", payload);
-
-        const res = await fetch("https://riskcard-bk.onrender.com/checkout", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-
-        this.response = await res.json();
-      } catch (err) {
-        console.error(err);
-      }
+            this.response = await res.json();
+          } catch (err) {
+            console.error(err);
+            this.response = err;
+          }
+        },
+        (error) => {
+          console.error("Erro tokenize:", error);
+          this.response = error;
+        }
+      );
     }
   }
 };
