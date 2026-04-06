@@ -75,7 +75,7 @@ export default {
       try {
         // 1. Gerar token usando API direta (SEM SDK)
         console.log("1. Gerando token do cartão...");
-        const cardToken = await this.gerarTokenCartaoViaAPI();
+        const cardToken = await this.gerarTokenCartaoComSDK();
         
         if (!cardToken) {
           throw new Error("Falha ao gerar token do cartão");
@@ -120,48 +120,58 @@ export default {
       }
     },
 
-    async gerarTokenCartaoViaAPI() {
-      // API direta de tokenização da Pagar.me v1 (ainda funciona)
-      const cardData = {
-        card_number: this.card.number.replace(/\D/g, ''),
-        card_holder_name: this.card.name,
-        card_expiration_date: `${this.card.exp_month}${this.card.exp_year}`,
-        card_cvv: this.card.cvv
+    async gerarTokenCartaoComSDK() {
+      // Aguarda o SDK carregar (importante em apps Vue)
+      const aguardarSDK = () => {
+        return new Promise((resolve) => {
+          if (window.pagarme && typeof window.pagarme.client === 'object') {
+            resolve();
+            return;
+          }
+          const checkInterval = setInterval(() => {
+            if (window.pagarme && typeof window.pagarme.client === 'object') {
+              clearInterval(checkInterval);
+              resolve();
+            }
+          }, 100);
+        });
       };
 
-      console.log("Tokenizando cartão:", cardData);
+      await aguardarSDK();
 
-      try {
-        const response = await fetch("https://api.pagar.me/1/transactions/card_hash_key", {
-          method: "POST",
-          headers: { 
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            api_key: "pk_YlZAe1wCltJVdkay",
-            amount: this.reaisParaCentavos(this.valorReais),
-            card_data: cardData
-          })
+      return new Promise((resolve, reject) => {
+        // 1. Configura a chave pública
+        window.pagarme.client.connect({ api_key: "pk_YlZAe1wCltJVdkay" });
+
+        // 2. Prepara os dados do cartão (formato esperado pelo SDK)
+        const cardData = {
+          card_number: this.card.number.replace(/\D/g, ''),
+          card_holder_name: this.card.name,
+          card_expiration_date: `${this.card.exp_month}${this.card.exp_year}`,
+          card_cvv: this.card.cvv
+        };
+
+        console.log("Tokenizando com SDK:", cardData);
+
+        // 3. Chama o método 'hash' para gerar o token
+        window.pagarme.client.card.hash(cardData, (response, error) => {
+          if (error) {
+            console.error("Erro na tokenização (SDK):", error);
+            // Trata erros comuns, como chave inválida [citation:1]
+            let mensagemErro = "Falha ao gerar token do cartão.";
+            if (error.response && error.response.errors) {
+              mensagemErro = error.response.errors.map(e => e.message).join(", ");
+            } else if (error.message) {
+              mensagemErro = error.message;
+            }
+            reject(new Error(mensagemErro));
+          } else {
+            console.log("Token gerado com sucesso:", response);
+            // O token é o 'id' retornado pelo SDK [citation:3]
+            resolve(response.id);
+          }
         });
-
-        const data = await response.json();
-        
-        console.log("Resposta da tokenização:", data);
-        
-        if (!response.ok) {
-          throw new Error(data.message || JSON.stringify(data));
-        }
-        
-        if (!data.card_hash) {
-          throw new Error("Resposta não contém card_hash");
-        }
-        
-        return data.card_hash;
-        
-      } catch (error) {
-        console.error("Erro na tokenização:", error);
-        throw new Error(`Tokenização falhou: ${error.message}`);
-      }
+      });
     },
 
     validarCampos() {

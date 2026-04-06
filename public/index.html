@@ -11,6 +11,24 @@
       <strong>We're sorry but this app doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app"></div>
-    <!-- NENHUM SCRIPT EXTERNO - API direta -->
+    
+    <!-- Carrega o SDK oficial da Pagar.me v4 (compatível com sua chave) -->
+    <script src="https://assets.pagar.me/pagarme-js/1.3.1/pagarme.min.js"></script>
+    
+    <script>
+      // Inicializa o SDK assim que ele carregar, deixando-o pronto para uso no Vue.
+      window.Pagarme = window.Pagarme || {};
+      window.Pagarme.initialize = function() {
+        if (typeof pagarme !== 'undefined') {
+          window.pagarme = pagarme;
+          console.log('SDK Pagar.me inicializado com sucesso.');
+        }
+      };
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', window.Pagarme.initialize);
+      } else {
+        window.Pagarme.initialize();
+      }
+    </script>
   </body>
 </html>
