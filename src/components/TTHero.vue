@@ -32,7 +32,7 @@
           <div class="hero-contact">
             <a :href="whatsappHero" target="_blank" class="contact-item">
               <v-icon size="16" color="#E8821A">mdi-whatsapp</v-icon>
-              (51) 93065-9881
+              (11) 97337-2843
             </a>
             <span class="contact-divider">•</span>
             <a href="mailto:atendimento@turbotrack.com.br" class="contact-item">
@@ -149,7 +149,7 @@ const urgencias = [
   '🗓️ Programado — data específica',
 ]
 
-const numero = '5551930659881'
+const numero = '5511973372843'
 const whatsappHero = `https://wa.me/${numero}?text=Olá%2C%20gostaria%20de%20informações%20sobre%20agenciamento%20de%20fretes!`
 
 const whatsappLink = computed(() => {
@@ -160,9 +160,10 @@ const whatsappLink = computed(() => {
 
 <style scoped>
 .hero-wrap {
-  background: #0C1A3E; min-height: 88vh;
+  background: #0C1A3E; min-height: 85vh;
   display: flex; align-items: center;
   position: relative; overflow: hidden;
+  margin-top: 0;
 }
 .hero-side-bar { display: none; }
 .hero-inner {
@@ -202,8 +203,8 @@ const whatsappLink = computed(() => {
 
 /* CARD COTAÇÃO */
 .hero-right { position: relative; display: flex; justify-content: center; }
-.cotacao-card { background: #fff; border-radius: 12px; box-shadow: 0 24px 64px rgba(0,0,0,0.4); overflow: hidden; width: 100%; }
-.cotacao-header { display: flex; align-items: center; gap: 10px; background: #0C1A3E; padding: 12px 18px; font-size: 12px; font-weight: 700; color: #fff; letter-spacing: 0.04em; text-transform: uppercase; }
+.cotacao-card { background: #fff; border-radius: 12px; box-shadow: 0 24px 64px rgba(0,0,0,0.5); overflow: hidden; width: 100%; border-top: 3px solid #E8821A; }
+.cotacao-header { display: flex; align-items: center; gap: 10px; background: #F8F8F8; border-bottom: 1px solid #EBEBEB; padding: 12px 18px; font-size: 12px; font-weight: 700; color: #0C1A3E; letter-spacing: 0.04em; text-transform: uppercase; }
 .cotacao-body { padding: 16px; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 0; }
 .btn-cotacao { display: flex; align-items: center; justify-content: center; gap: 8px; background: #E8821A; color: #fff; font-size: 14px; font-weight: 800; padding: 14px; border-radius: 6px; text-decoration: none; transition: all 0.2s; margin-top: 12px; letter-spacing: 0.04em; text-transform: uppercase; font-family: 'Barlow', 'Inter', sans-serif; }

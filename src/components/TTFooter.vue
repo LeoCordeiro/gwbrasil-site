@@ -6,7 +6,7 @@
       <div class="footer-main">
         <div class="footer-brand">
           <div class="mb-3">
-            <img :src="require('@/assets/tt-logo-header.png')" style="height:64px; width:auto; display:block; margin-bottom:12px" />
+            <img :src="require('@/assets/tt-logo-header.png')" style="height:80px; width:auto; display:block; margin-bottom:12px" />
           </div>
           <p class="footer-desc">Plataforma B2B de agenciamento de fretes sob demanda. Analisamos sua carga, selecionamos a transportadora ideal e coordenamos toda a operação.</p>
           <div class="footer-address">
@@ -32,9 +32,9 @@
           </div>
           <div class="footer-col">
             <div class="footer-col-title">Contato</div>
-            <a href="https://wa.me/5551930659881" target="_blank" class="footer-link footer-contact">
+            <a href="https://wa.me/5511973372843" target="_blank" class="footer-link footer-contact">
               <v-icon size="13" color="#E8821A" class="mr-1">mdi-whatsapp</v-icon>
-              (51) 93065-9881
+              (11) 97337-2843
             </a>
             <a href="mailto:atendimento@turbotrack.com.br" class="footer-link footer-contact">
               <v-icon size="13" color="#E8821A" class="mr-1">mdi-email-outline</v-icon>

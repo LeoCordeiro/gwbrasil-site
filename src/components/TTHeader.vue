@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar height="80" flat color="#0C1A3E" elevation="0">
+  <v-app-bar height="88" flat color="#0C1A3E" elevation="0">
     <v-container class="d-flex align-center" style="max-width:1280px; position:relative">
 
       <v-btn icon class="mr-2 d-md-none" @click="drawer = !drawer" variant="text" color="white">
@@ -49,7 +49,7 @@ const drawer = ref(false)
 </script>
 
 <style scoped>
-.logo-main { height: 64px; width: auto; display: block; }
+.logo-main { height: 76px; width: auto; display: block; }
 
 .nav-link { text-decoration:none; color:rgba(255,255,255,0.65); font-size:13px; font-weight:500; padding:8px 14px; border-radius:4px; transition:all 0.2s; }
 .nav-link:hover { color:#fff; background:rgba(255,255,255,0.06); }
