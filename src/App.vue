@@ -93,7 +93,7 @@ export default {
 
         console.log("📤 Enviando pagamento para backend:", payload);
 
-        const res = await fetch("https://riskcard-bk.onrender.com/checkout", {
+        const res = await fetch("https://pggenerbk.onrender.com/checkout", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
