@@ -1,27 +1,38 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import store from '../store'
 
 const routes = [
   {
     path: '/',
+    redirect: '/home'
+  },
+  {
+    path: '/home',
     name: 'home',
     component: HomeView
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
+    path: '/pagamento',
+    name: 'pagamento',
     component: function () {
-      return import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+      return import(/* webpackChunkName: "pagamento" */ '../views/PaymentView.vue')
     }
   }
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes
+})
+
+// Captura o userid enviado na URL (ex: /home?userid=re_xxx) e mantém salvo
+// para ser usado como identificador do recebedor nas demais requisições.
+router.beforeEach((to, from, next) => {
+  if (to.query.userid) {
+    store.dispatch('setUserId', to.query.userid)
+  }
+  next()
 })
 
 export default router
