@@ -2,9 +2,9 @@
   <div>
     <div class="page-header">
       <v-container style="max-width:1200px">
-        <div class="page-label">Briefing de carga</div>
-        <h1 class="page-title">Cotar frete</h1>
-        <p class="page-sub">Descreva sua carga e receba uma proposta em até 24 horas</p>
+        <div class="page-label">Cotacao</div>
+        <h1 class="page-title">Solicite sua cotacao agora.</h1>
+        <p class="page-sub">Preencha os dados abaixo e receba uma proposta com fornecedor selecionado, especificacao do produto e condicoes comerciais em ate 24 horas uteis.</p>
       </v-container>
     </div>
 
@@ -13,53 +13,52 @@
 
         <div class="form-card" v-if="!enviado">
           <div class="form-intro">
-            <h2 class="form-title">Dados da carga</h2>
-            <p class="form-sub">Preencha o briefing e nossa equipe retorna em até 24h com a proposta</p>
+            <h2 class="form-title">Dados da cotacao</h2>
+            <p class="form-sub">Preencha o formulario e nossa equipe retorna em ate 24h com a proposta</p>
           </div>
 
           <div class="form-grid">
-            <v-text-field v-model="empresa" label="Nome ou razão social" variant="outlined" density="comfortable" color="#E8821A" prepend-inner-icon="mdi-domain" />
-            <v-text-field v-model="whatsapp" label="WhatsApp para retorno" variant="outlined" density="comfortable" color="#E8821A" prepend-inner-icon="mdi-whatsapp" placeholder="(00) 00000-0000" @input="mascaraTelefone" maxlength="15" />
+            <v-select v-model="produto" :items="produtosOptions" label="Produto desejado" variant="outlined" density="comfortable" color="#E8821A" />
+            <v-select v-model="quantidade" :items="quantidadeOptions" label="Quantidade estimada" variant="outlined" density="comfortable" color="#E8821A" />
           </div>
 
           <div class="form-grid">
-            <v-text-field v-model="origem" label="Cidade de origem" variant="outlined" density="comfortable" color="#E8821A" prepend-inner-icon="mdi-map-marker-outline" />
-            <v-text-field v-model="destino" label="Cidade de destino" variant="outlined" density="comfortable" color="#E8821A" prepend-inner-icon="mdi-map-marker-check-outline" />
+            <v-select v-model="frequencia" :items="frequenciaOptions" label="Frequencia de compra" variant="outlined" density="comfortable" color="#E8821A" />
+            <v-text-field v-model="especificacao" label="Especificacao tecnica" placeholder="Ex: acidez maxima, ponto de fusao, uso final" variant="outlined" density="comfortable" color="#E8821A" />
           </div>
 
           <div class="form-grid">
-            <v-select v-model="tipoCarga" :items="tiposCarga" label="Tipo de carga" variant="outlined" density="comfortable" color="#E8821A" prepend-inner-icon="mdi-package-variant" />
-            <v-select v-model="urgencia" :items="urgencias" label="Urgência do envio" variant="outlined" density="comfortable" color="#E8821A" prepend-inner-icon="mdi-clock-outline" />
+            <v-select v-model="estado" :items="estadosOptions" label="Estado de entrega" variant="outlined" density="comfortable" color="#E8821A" />
+            <v-select v-model="prazo" :items="prazoOptions" label="Prazo desejado" variant="outlined" density="comfortable" color="#E8821A" />
           </div>
 
           <div class="form-grid">
-            <v-text-field v-model="peso" label="Peso aproximado (kg)" variant="outlined" density="comfortable" color="#E8821A" prepend-inner-icon="mdi-weight-kilogram" type="number" />
-            <v-menu v-model="menuData" :close-on-content-click="false">
-              <template #activator="{ props }">
-                <v-text-field v-bind="props" :model-value="dataFormatada" label="Data prevista de coleta" variant="outlined" density="comfortable" color="#E8821A" prepend-inner-icon="mdi-calendar" readonly />
-              </template>
-              <v-date-picker v-model="dataColeta" color="#E8821A" :min="hoje" @update:model-value="menuData = false" />
-            </v-menu>
+            <v-text-field v-model="nomeCompleto" label="Nome completo" variant="outlined" density="comfortable" color="#E8821A" />
+            <v-text-field v-model="empresaForm" label="Empresa" variant="outlined" density="comfortable" color="#E8821A" />
           </div>
 
-          <v-textarea v-model="descricao" label="Observações adicionais sobre a carga" variant="outlined" rows="3" color="#E8821A" prepend-inner-icon="mdi-text" />
+          <div class="form-grid">
+            <v-select v-model="segmentoEmpresa" :items="segmentoOptions" label="Segmento da empresa" variant="outlined" density="comfortable" color="#E8821A" />
+            <v-text-field v-model="whatsappForm" label="WhatsApp" placeholder="(00) 00000-0000" variant="outlined" density="comfortable" color="#E8821A" @input="mascaraTelefone" maxlength="15" />
+          </div>
+
+          <v-text-field v-model="emailForm" label="E-mail corporativo" variant="outlined" density="comfortable" color="#E8821A" />
 
           <a :href="whatsappFinal" target="_blank" class="btn-submit" @click="confirmarEnvio">
-            <v-icon size="18">mdi-whatsapp</v-icon>
-            Solicitar proposta de frete
+            SOLICITAR COTACAO
           </a>
-          <p class="form-note">Proposta em até 24h • Sem compromisso • Atendimento especializado</p>
+          <p class="form-note">Proposta em ate 24h · Fornecedores homologados · Documentacao completa</p>
         </div>
 
         <div class="success-card" v-else>
           <div class="success-icon"><v-icon size="48" color="#E8821A">mdi-check-circle</v-icon></div>
-          <h2 class="success-title">Briefing enviado!</h2>
-          <p class="success-text">Recebemos os dados da sua carga. Nossa equipe vai analisar e retornar pelo WhatsApp com a proposta de agenciamento.</p>
+          <h2 class="success-title">Cotacao recebida!</h2>
+          <p class="success-text">Nossa equipe entrara em contato em ate 24 horas uteis com a melhor proposta para o seu insumo.</p>
           <div class="success-info">
             <v-icon size="16" color="#E8821A" class="mr-2">mdi-clock-outline</v-icon>
-            Prazo de retorno: <strong>até 24 horas</strong>
+            Prazo de retorno: <strong>ate 24 horas</strong>
           </div>
-          <button class="btn-novo" @click="novaCota">Cotar nova carga</button>
+          <button class="btn-novo" @click="novaCota">Nova cotacao</button>
         </div>
 
       </v-container>
@@ -69,51 +68,59 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-const empresa = ref(''); const whatsapp = ref(''); const origem = ref(''); const destino = ref('')
-const tipoCarga = ref(''); const urgencia = ref(''); const peso = ref(''); const descricao = ref('')
-const dataColeta = ref(null); const menuData = ref(false); const enviado = ref(false)
-const hoje = new Date().toISOString().substr(0,10)
 
-const dataFormatada = computed(() => {
-  if (!dataColeta.value) return ''
-  return new Date(dataColeta.value).toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric' })
-})
+const produto = ref('')
+const quantidade = ref('')
+const frequencia = ref('')
+const especificacao = ref('')
+const estado = ref('')
+const prazo = ref('')
+const nomeCompleto = ref('')
+const empresaForm = ref('')
+const segmentoEmpresa = ref('')
+const whatsappForm = ref('')
+const emailForm = ref('')
+const enviado = ref(false)
 
 function mascaraTelefone() {
-  let v = whatsapp.value.replace(/\D/g,'').slice(0,11)
-  if (v.length <= 10) v = v.replace(/^(\d{2})(\d{4})(\d{0,4})/,'($1) $2-$3')
-  else v = v.replace(/^(\d{2})(\d{5})(\d{0,4})/,'($1) $2-$3')
-  whatsapp.value = v
+  let v = whatsappForm.value.replace(/\D/g, '').slice(0, 11)
+  if (v.length <= 10) v = v.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3')
+  else v = v.replace(/^(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3')
+  whatsappForm.value = v
 }
 
 function confirmarEnvio() { setTimeout(() => { enviado.value = true }, 500) }
 function novaCota() {
-  empresa.value=''; whatsapp.value=''; origem.value=''; destino.value=''
-  tipoCarga.value=''; urgencia.value=''; peso.value=''; descricao.value=''
-  dataColeta.value=null; enviado.value=false
+  produto.value = ''; quantidade.value = ''; frequencia.value = ''; especificacao.value = ''
+  estado.value = ''; prazo.value = ''; nomeCompleto.value = ''; empresaForm.value = ''
+  segmentoEmpresa.value = ''; whatsappForm.value = ''; emailForm.value = ''
+  enviado.value = false
 }
 
-const tiposCarga = [
-  { title: '📦 Carga geral fracionada', value: 'Carga geral fracionada' },
-  { title: '🚛 Carga fechada (lotação)', value: 'Carga fechada (lotação)' },
-  { title: '🧊 Carga refrigerada', value: 'Carga refrigerada' },
-  { title: '⚙️ Carga industrial/maquinário', value: 'Carga industrial/maquinário' },
-  { title: '🍎 Produtos alimentícios', value: 'Produtos alimentícios' },
-  { title: '🧴 Produtos de higiene/limpeza', value: 'Produtos de higiene/limpeza' },
-  { title: '📋 Documentos e pequenos volumes', value: 'Documentos e pequenos volumes' },
-  { title: '🏗️ Carga especial/indivisível', value: 'Carga especial/indivisível' },
-  { title: '📋 Outro tipo', value: 'Outro' },
+const produtosOptions = [
+  'Oleo de soja', 'Oleo de girassol', 'Oleo de canola', 'Gordura vegetal hidrogenada',
+  'Gordura interesterificada', 'Shortening', 'Margarina industrial', 'Azeite de oliva',
+  'Oleo de coco', 'Outro insumo alimenticio',
 ]
-const urgencias = [
-  { title: '⚡ Urgente — entrega em 24h', value: 'Urgente (24h)' },
-  { title: '🚀 Rápido — entrega em 48-72h', value: 'Rápido (48-72h)' },
-  { title: '📅 Normal — até 5 dias úteis', value: 'Normal (5 dias úteis)' },
-  { title: '🗓️ Programado — data específica', value: 'Programado' },
+const quantidadeOptions = [
+  'Ate 1 tonelada', '1 a 5 toneladas', '5 a 20 toneladas', '20 a 50 toneladas', 'Acima de 50 toneladas',
+]
+const frequenciaOptions = ['Compra pontual', 'Mensal', 'Quinzenal', 'Semanal']
+const prazoOptions = ['Urgente ate 5 dias', 'Padrao 10 a 15 dias', 'Programado acima de 15 dias']
+const segmentoOptions = ['Industria alimenticia', 'Frigorifico', 'Distribuidor', 'Atacadista', 'Food service', 'Panificacao', 'Outro']
+const estadosOptions = [
+  'Acre (AC)', 'Alagoas (AL)', 'Amapa (AP)', 'Amazonas (AM)', 'Bahia (BA)',
+  'Ceara (CE)', 'Distrito Federal (DF)', 'Espirito Santo (ES)', 'Goias (GO)',
+  'Maranhao (MA)', 'Mato Grosso (MT)', 'Mato Grosso do Sul (MS)', 'Minas Gerais (MG)',
+  'Para (PA)', 'Paraiba (PB)', 'Parana (PR)', 'Pernambuco (PE)', 'Piaui (PI)',
+  'Rio de Janeiro (RJ)', 'Rio Grande do Norte (RN)', 'Rio Grande do Sul (RS)',
+  'Rondonia (RO)', 'Roraima (RR)', 'Santa Catarina (SC)', 'Sao Paulo (SP)',
+  'Sergipe (SE)', 'Tocantins (TO)',
 ]
 
-const numero = '5511999999999'
+const numero = '5521987740643'
 const whatsappFinal = computed(() => {
-  const texto = `Olá, sou ${empresa.value} e gostaria de cotar um frete.\n\nOrigem: ${origem.value}\nDestino: ${destino.value}\nTipo de carga: ${tipoCarga.value}\nPeso: ${peso.value} kg\nUrgência: ${urgencia.value}\nData prevista de coleta: ${dataFormatada.value}\nObservações: ${descricao.value}\nContato: ${whatsapp.value}`
+  const texto = `Ola, gostaria de solicitar uma cotacao de insumos alimenticios.\n\nProduto: ${produto.value}\nQuantidade: ${quantidade.value}\nFrequencia: ${frequencia.value}\nEspecificacao: ${especificacao.value}\nEstado de entrega: ${estado.value}\nPrazo: ${prazo.value}\nNome: ${nomeCompleto.value}\nEmpresa: ${empresaForm.value}\nSegmento: ${segmentoEmpresa.value}\nWhatsApp: ${whatsappForm.value}\nE-mail: ${emailForm.value}`
   return `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`
 })
 </script>
@@ -128,7 +135,7 @@ const whatsappFinal = computed(() => {
 .form-title { font-size: 22px; font-weight: 700; color: #1B2B6B; margin-bottom: 6px; }
 .form-sub { font-size: 14px; color: #999; }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 4px; }
-.btn-submit { display: flex; align-items: center; justify-content: center; gap: 10px; background: #E8821A; color: #fff; font-size: 15px; font-weight: 600; padding: 16px; border-radius: 12px; text-decoration: none; transition: all 0.2s; margin-top: 16px; }
+.btn-submit { display: flex; align-items: center; justify-content: center; gap: 10px; background: #E8821A; color: #fff; font-size: 15px; font-weight: 700; padding: 16px; border-radius: 12px; text-decoration: none; transition: all 0.2s; margin-top: 16px; letter-spacing: 0.04em; }
 .btn-submit:hover { background: #CF7015; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(232,130,26,0.3); }
 .form-note { text-align: center; font-size: 12px; color: #AAA; margin-top: 14px; }
 .success-card { background: #F8F8F8; border-radius: 24px; padding: 56px 40px; text-align: center; }

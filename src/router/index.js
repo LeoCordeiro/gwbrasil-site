@@ -6,6 +6,7 @@ import TTSolicitarOrcamento from '@/pages/TTSolicitarOrcamento.vue'
 import TTSobre from '@/pages/TTSobre.vue'
 import TTPoliticaPrivacidade from '@/pages/TTPoliticaPrivacidade.vue'
 import TTPoliticaTermosDeUso from '@/pages/TTPoliticaTermosDeUso.vue'
+import TTPoliticaRepasse from '@/pages/TTPoliticaRepasse.vue'
 
 const routes = [
   { path: '/', component: TTHome },
@@ -15,6 +16,7 @@ const routes = [
   { path: '/solicitar', component: TTSolicitarOrcamento },
   { path: '/privacidade', component: TTPoliticaPrivacidade },
   { path: '/termos', component: TTPoliticaTermosDeUso },
+  { path: '/repasse', component: TTPoliticaRepasse },
 ]
 
 const router = createRouter({

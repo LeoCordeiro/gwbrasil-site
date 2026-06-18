@@ -3,8 +3,8 @@
     <div class="page-header">
       <v-container style="max-width:1200px">
         <div class="page-label">Quem somos</div>
-        <h1 class="page-title">Sobre a Turbo Track</h1>
-        <p class="page-sub">Agenciamento de fretes B2B com tecnologia, rede e resultado</p>
+        <h1 class="page-title">Sobre a GW Brasil Sul</h1>
+        <p class="page-sub">Intermediacao de atacado de oleos, gorduras e insumos alimenticios B2B</p>
       </v-container>
     </div>
 
@@ -12,8 +12,8 @@
       <v-container style="max-width:1200px">
         <div class="historia-grid">
           <div>
-            <div class="page-label" style="color:#E8821A">Nossa história</div>
-            <h2 class="block-title">De São Paulo para<br>todo o Brasil</h2>
+            <div class="page-label" style="color:#E8821A">Nossa atuacao</div>
+            <h2 class="block-title">De Camboriu para<br>todo o Brasil</h2>
             <div class="timeline">
               <div class="timeline-item" v-for="item in timeline" :key="item.ano">
                 <div class="timeline-ano">{{ item.ano }}</div>
@@ -25,9 +25,9 @@
             </div>
           </div>
           <div>
-            <p class="about-text">Fundada em <strong>dezembro de 2021</strong>, a Turbo Track nasceu na Av. Paulista com um objetivo claro: tornar o agenciamento de fretes B2B simples, ágil e transparente.</p>
-            <p class="about-text">Indústrias, distribuidores e atacadistas perdem tempo e dinheiro tentando negociar fretes com dezenas de transportadoras. A Turbo Track resolve isso: o cliente descreve a carga, nós analisamos, cotamos, contratamos e acompanhamos.</p>
-            <p class="about-text">Atuamos com cargas intermunicipais e interestaduais em todo o Brasil, com foco em operações B2B corporativas que exigem confiabilidade e prazo.</p>
+            <p class="about-text">A <strong>GW Brasil Sul</strong> atua na intermediacao de atacado de oleos, gorduras e insumos alimenticios para industrias e distribuidores do Sul do Brasil.</p>
+            <p class="about-text">Industrias, distribuidores e atacadistas perdem tempo e dinheiro tentando negociar diretamente com dezenas de fornecedores. A GW Brasil Sul resolve isso: o cliente descreve a necessidade, nos negociamos, selecionamos o fornecedor ideal e coordenamos todo o processo ate a entrega.</p>
+            <p class="about-text">Atuamos com foco no Sul e Sudeste, onde se concentra a maior industria alimenticia do pais, com cobertura de fornecedores em todo o Brasil.</p>
             <div class="stats-grid">
               <div class="stat-box" v-for="n in numeros" :key="n.value">
                 <div class="stat-value">{{ n.value }}</div>
@@ -42,7 +42,7 @@
     <section class="section-gray">
       <v-container style="max-width:1200px">
         <div class="text-center mb-10">
-          <div class="page-label" style="color:#E8821A; text-align:center">Nossa essência</div>
+          <div class="page-label" style="color:#E8821A; text-align:center">Nossa essencia</div>
           <h2 class="block-title" style="text-align:center">O que nos move</h2>
         </div>
         <div class="valores-grid">
@@ -57,10 +57,9 @@
 
     <section class="section-dark-cta">
       <v-container style="max-width:900px; text-align:center">
-        <h2 class="cta-title">Pronto para simplificar<br>sua logística?</h2>
+        <h2 class="cta-title">Pronto para melhorar<br>o fornecimento de insumos?</h2>
         <div class="cta-actions">
-          <router-link to="/solicitar" class="btn-orange">Cotar meu frete</router-link>
-          <router-link to="/parceiro" class="btn-outline-white">Quero ser parceiro</router-link>
+          <router-link to="/solicitar" class="btn-orange">Solicitar cotacao</router-link>
         </div>
       </v-container>
     </section>
@@ -69,24 +68,24 @@
 
 <script setup>
 const timeline = [
-  { ano: '2021', title: 'Fundação', desc: 'A Turbo Track é fundada em dezembro, com sede na Av. Paulista, São Paulo.' },
-  { ano: '2022', title: 'Estruturação da rede', desc: 'Montamos nossa rede de transportadoras parceiras para cargas intermunicipais e interestaduais.' },
-  { ano: '2023', title: 'Crescimento B2B', desc: 'Passamos a atender indústrias, distribuidores e atacadistas com operações recorrentes.' },
-  { ano: '2024', title: 'Plataforma digital', desc: 'Lançamos o site de briefing de carga para facilitar a contratação do agenciamento.' },
+  { ano: 'Origem', title: 'Fundacao', desc: 'A GW Brasil Sul e fundada em Camboriu, SC, com foco na intermediacao de insumos alimenticios para o mercado B2B.' },
+  { ano: 'Rede', title: 'Estruturacao da rede', desc: 'Construimos relacionamentos solidos com os maiores atacadistas e fornecedores de insumos alimenticios do Brasil.' },
+  { ano: 'Expansao', title: 'Crescimento B2B', desc: 'Passamos a atender industrias, distribuidores e operacoes de food service com fornecimento recorrente e condicoes exclusivas.' },
+  { ano: 'Digital', title: 'Plataforma de cotacao', desc: 'Lancamos o site com formulario de cotacao para facilitar o acesso a propostas com fornecedores qualificados.' },
 ]
 const numeros = [
-  { value: 'SP', label: 'Sede em São Paulo' },
+  { value: 'SC', label: 'Sede em Camboriu' },
   { value: 'B2B', label: 'Foco corporativo' },
   { value: '24h', label: 'Proposta garantida' },
-  { value: '100%', label: 'Operação coordenada' },
+  { value: '100%', label: 'Operacao coordenada' },
 ]
 const valores = [
-  { icon: 'mdi-shield-check-outline', title: 'Transparência', desc: 'Proposta clara, sem taxas escondidas ou surpresas no processo.' },
-  { icon: 'mdi-lightning-bolt-outline', title: 'Agilidade', desc: 'Resposta em até 24h para qualquer demanda de frete corporativo.' },
-  { icon: 'mdi-truck-check-outline', title: 'Confiabilidade', desc: 'Transportadoras rigorosamente selecionadas para garantir prazo e segurança.' },
-  { icon: 'mdi-handshake-outline', title: 'Parceria', desc: 'Tratamos cada operação como se fosse nossa própria carga.' },
-  { icon: 'mdi-map-marker-check-outline', title: 'Cobertura nacional', desc: 'Atendemos cargas intermunicipais e interestaduais em todo o Brasil.' },
-  { icon: 'mdi-chart-line', title: 'Resultado', desc: 'Nosso sucesso é medido pela eficiência e economia gerada para nossos clientes.' },
+  { icon: 'mdi-shield-check-outline', title: 'Transparencia', desc: 'Proposta clara, com fornecedor identificado, especificacao tecnica e condicoes comerciais detalhadas.' },
+  { icon: 'mdi-lightning-bolt-outline', title: 'Agilidade', desc: 'Resposta em ate 24h para qualquer demanda de insumos alimenticios.' },
+  { icon: 'mdi-check-decagram', title: 'Confiabilidade', desc: 'Fornecedores rigorosamente validados para garantir qualidade, prazo e regularidade fiscal.' },
+  { icon: 'mdi-handshake-outline', title: 'Parceria', desc: 'Tratamos cada operacao como se fosse a nossa propria demanda.' },
+  { icon: 'mdi-map-marker-check-outline', title: 'Cobertura nacional', desc: 'Fornecedores em todo o Brasil, com foco no Sul e Sudeste.' },
+  { icon: 'mdi-chart-line', title: 'Resultado', desc: 'Nosso sucesso e medido pela economia e eficiencia gerada para nossos clientes.' },
 ]
 </script>
 
@@ -101,8 +100,8 @@ const valores = [
 .block-title { font-size: clamp(24px,3vw,38px); font-weight: 800; color: #1B2B6B; letter-spacing: -0.02em; margin-bottom: 36px; line-height: 1.1; }
 .historia-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 64px; }
 .timeline { display: flex; flex-direction: column; gap: 0; }
-.timeline-item { display: grid; grid-template-columns: 52px 1fr; gap: 16px; padding-bottom: 28px; position: relative; }
-.timeline-item:not(:last-child)::before { content: ''; position: absolute; left: 22px; top: 26px; bottom: 0; width: 1px; background: #EBEBEB; }
+.timeline-item { display: grid; grid-template-columns: 72px 1fr; gap: 16px; padding-bottom: 28px; position: relative; }
+.timeline-item:not(:last-child)::before { content: ''; position: absolute; left: 32px; top: 26px; bottom: 0; width: 1px; background: #EBEBEB; }
 .timeline-ano { font-size: 12px; font-weight: 800; color: #E8821A; padding-top: 2px; }
 .timeline-title { font-size: 14px; font-weight: 700; color: #1B2B6B; margin-bottom: 4px; }
 .timeline-desc { font-size: 13px; color: #888; line-height: 1.6; }
@@ -123,8 +122,6 @@ const valores = [
 .cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
 .btn-orange { display: inline-flex; align-items: center; background: #E8821A; color: #fff; font-size: 15px; font-weight: 600; padding: 14px 28px; border-radius: 10px; text-decoration: none; transition: all 0.2s; }
 .btn-orange:hover { background: #CF7015; transform: translateY(-2px); }
-.btn-outline-white { display: inline-flex; align-items: center; border: 1px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.8); font-size: 15px; font-weight: 500; padding: 14px 28px; border-radius: 10px; text-decoration: none; transition: all 0.2s; }
-.btn-outline-white:hover { border-color: #fff; color: #fff; }
 @media (max-width: 960px) { .historia-grid { grid-template-columns: 1fr; gap: 40px; } .valores-grid { grid-template-columns: 1fr 1fr; } .stats-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 600px) { .valores-grid { grid-template-columns: 1fr; } }
 </style>
