@@ -1,4 +1,4 @@
-# nerihub
+# ft
 
 ## Project setup
 ```
